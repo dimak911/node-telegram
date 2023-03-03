@@ -8,7 +8,7 @@ const production = process.env.NODE_ENV;
 
 const bot = new TelegramApi(
   token,
-  production ? { webHook: process.env.WEBHOOK_URL } : { polling: true }
+  production ? { webHook: true } : { polling: true }
 );
 
 const chats = {};
@@ -25,6 +25,8 @@ const startGame = async (chatId) => {
 };
 
 const start = () => {
+  bot.setWebHook(process.env.WEBHOOK_URL);
+
   bot.setMyCommands([
     { command: "/start", description: "Welcome message" },
     { command: "/info", description: "Get user first name and last name" },
