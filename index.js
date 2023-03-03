@@ -96,6 +96,7 @@ if (production) {
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
+    start();
     console.log(`Bot listening on port ${PORT}`);
   });
 } else {
