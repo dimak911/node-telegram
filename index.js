@@ -1,5 +1,3 @@
-const express = require("express");
-
 const TelegramApi = require("node-telegram-bot-api");
 const { gameOptions, againOptions } = require("./options");
 require("dotenv").config();
@@ -8,9 +6,10 @@ const token = process.env.TELEGRAM_TOKEN;
 
 const production = process.env.NODE_ENV;
 
-console.log(production);
-
-const bot = new TelegramApi(token, production ? {} : { polling: true });
+const bot = new TelegramApi(
+  token,
+  production ? { webHook: process.env.WEBHOOK_URL } : { polling: true }
+);
 
 const chats = {};
 
@@ -31,11 +30,6 @@ const start = () => {
     { command: "/info", description: "Get user first name and last name" },
     { command: "/game", description: "Guess number from 0 to 9" },
   ]);
-
-  if (production) {
-    console.log("production if");
-    bot.setWebHook(process.env.WEBHOOK_URL);
-  }
 
   bot.on("message", async (msg) => {
     const text = msg.text;
@@ -87,19 +81,4 @@ const start = () => {
   });
 };
 
-// start();
-
-if (production) {
-  // Use Webhooks for the production server
-  const app = express();
-  app.use(express.json());
-
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    start();
-    console.log(`Bot listening on port ${PORT}`);
-  });
-} else {
-  // Use Long Polling for development
-  start();
-}
+start();
