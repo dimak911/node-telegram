@@ -4,7 +4,11 @@ require("dotenv").config();
 
 const token = process.env.TELEGRAM_TOKEN;
 
-const bot = new TelegramApi(token, { polling: true });
+const production = process.env.NODE_ENV;
+
+console.log(production);
+
+const bot = new TelegramApi(token, production ? {} : { polling: true });
 
 const chats = {};
 
@@ -25,6 +29,10 @@ const start = () => {
     { command: "/info", description: "Get user first name and last name" },
     { command: "/game", description: "Guess number from 0 to 9" },
   ]);
+
+  if (production) {
+    bot.setWebHook(process.env.WEBHOOK_URL);
+  }
 
   bot.on("message", async (msg) => {
     const text = msg.text;
