@@ -31,6 +31,7 @@ const start = () => {
   ]);
 
   if (production) {
+    console.log("production if");
     bot.setWebHook(process.env.WEBHOOK_URL);
   }
 
