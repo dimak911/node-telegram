@@ -1,3 +1,5 @@
+const express = require("express");
+
 const TelegramApi = require("node-telegram-bot-api");
 const { gameOptions, againOptions } = require("./options");
 require("dotenv").config();
@@ -85,4 +87,18 @@ const start = () => {
   });
 };
 
-start();
+// start();
+
+if (production) {
+  // Use Webhooks for the production server
+  const app = express();
+  app.use(express.json());
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Bot listening on port ${PORT}`);
+  });
+} else {
+  // Use Long Polling for development
+  start();
+}
